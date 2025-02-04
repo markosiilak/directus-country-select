@@ -14,7 +14,7 @@ This interface extension adds a country selector dropdown to Directus that allow
 ## Installation
 
 1. Download or clone this repository
-2. Move the `country-selector` folder to your Directus extensions directory
+2. Move the `directus-country-select` folder to your Directus extensions directory
 3. Restart your Directus instance
 
 ## Usage
