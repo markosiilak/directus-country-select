@@ -13,7 +13,8 @@
     "host": "^10.1.0"
   },
   "dependencies": {
-    "countries-list": "^2.6.1"
+    "countries-list": "^3.1.1",
+    "@directus/extensions-sdk" : "^13.0.0"
   },
   "scripts": {
     "build": "directus-extension build",
