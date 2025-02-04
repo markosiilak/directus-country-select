@@ -1,0 +1,18 @@
+{
+  "name": "directus-extension-country-selector",
+  "version": "1.0.0",
+  "type": "module",
+  "directus:extension": {
+    "type": "interface",
+    "path": "dist/index.cjs",
+    "source": "src/index.ts",
+    "host": "^10.1.0"
+  },
+  "dependencies": {
+    "countries-list": "^2.6.1"
+  },
+  "scripts": {
+    "build": "directus-extension build",
+    "dev": "directus-extension build --watch"
+  }
+}
