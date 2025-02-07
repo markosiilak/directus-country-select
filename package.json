@@ -1,9 +1,5 @@
 {
   "name": "directus-extension-country-selector",
-  "author": {
-    "name": "Marko Siilak",
-    "email": "marko@siilak.com"
-  },
   "version": "1.0.0",
   "type": "module",
   "directus:extension": {
@@ -13,8 +9,7 @@
     "host": "^10.1.0"
   },
   "dependencies": {
-    "countries-list": "^3.1.1",
-    "@directus/extensions-sdk" : "^13.0.0"
+    "countries-list": "^2.6.1"
   },
   "scripts": {
     "build": "directus-extension build",

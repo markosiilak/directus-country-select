@@ -1,19 +1,11 @@
 <template>
-  <div class="country-selector">
-    <v-select
-      :model-value="displayValue"
-      :items="countries"
-      :placeholder="$t('Select a country')"
-      item-value="value"
-      item-text="text"
-      @update:model-value="onChange" />
-    <v-icon
-      v-if="displayValue"
-      name="close"
-      class="clear-button"
-      small
-      @click="clearSelection" />
-  </div>
+  <v-select
+    :model-value="displayValue"
+    :items="countries"
+    :placeholder="$t('Select a country')"
+    item-value="value"
+    item-text="text"
+    @update:model-value="onChange" />
 </template>
 
 <script setup lang="ts">
@@ -52,30 +44,11 @@
   });
 
   const onChange = (newValue: string) => {
-    emit('input', newValue);
-  };
-
-  const clearSelection = () => {
-    emit('input', '');
+    const data = {
+      countryCode: newValue,
+      defaultLocale: newValue.toLowerCase()
+    };
+    const formattedValue = JSON.stringify(data).replace(/\\/g, '');
+    emit('input', formattedValue);
   };
 </script>
-
-<style scoped>
-.country-selector {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.clear-button {
-  position: absolute;
-  right: 3px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-}
-
-.clear-button:hover {
-  opacity: 1;
-}
-</style>
