@@ -1,6 +1,8 @@
 <template>
   <v-button
     @click="showDrawer = true"
+    secondary
+    large
     :disabled="disabled">
     {{ displayText?.countryName || selectedValue ? displayText.countryName || selectedValue?.countryName : 'Select a country' }}
   </v-button>
@@ -9,16 +11,16 @@
     v-model="showDrawer"
     title="Select a country"
     @cancel="showDrawer = false">
-    <template #actions>
-      <v-input
-        v-model="searchQuery"
-        placeholder="Search country..."
-        autofocus>
-        <template #prepend><v-icon name="search" /></template>
-      </v-input>
-    </template>
     <div class="countries-list">
       <v-list>
+        <div class="search-bar">
+          <v-input
+            v-model="searchQuery"
+            placeholder="Search country..."
+            autofocus>
+            <template #prepend><v-icon name="search" /></template>
+          </v-input>
+        </div>
         <v-list-item
           v-for="country in filteredCountries"
           :key="country.value"
@@ -191,6 +193,8 @@
 }
 
 .countries-list {
+  padding: 12px;
+  background: var(--background-subdued);
   height: 100%;
   overflow-y: auto;
 }
