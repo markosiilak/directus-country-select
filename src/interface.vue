@@ -6,6 +6,27 @@
     item-text="text"
     item-value="value"
     @update:model-value="updateSelectedCountry" />
+
+  <div v-if="selectedValue" class="country-info">
+    <div class="country-info-header">
+      <span class="country-name">{{ selectedValue?.countryName }}</span>
+      <span class="country-code">{{ selectedValue?.countryCode }}</span>
+    </div>
+    <div class="country-info-details">
+      <div class="info-item">
+        <span class="label">Locale:</span>
+        <span>{{ selectedValue?.defaultLocale }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Currency:</span>
+        <span>{{ selectedValue?.currency }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Phone:</span>
+        <span>{{ selectedValue?.phone }}</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -69,3 +90,49 @@
     emit('input', formattedValue);
   };
 </script>
+
+<style scoped>
+.country-info {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--background-subdued);
+  border: 1px solid var(--border-normal);
+}
+
+.country-info-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.country-name {
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.country-code {
+  padding: 2px 6px;
+  background: var(--primary-alt);
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: var(--primary);
+}
+
+.country-info-details {
+  display: grid;
+  gap: 8px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.label {
+  color: var(--foreground-subdued);
+  min-width: 70px;
+}
+</style>
