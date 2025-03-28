@@ -2,7 +2,7 @@
   <v-button
     @click="showDrawer = true"
     :disabled="disabled">
-    {{ displayText?.countryName ? displayText.countryName : 'Select a country' }}
+    {{ displayText?.countryName || selectedValue ? displayText.countryName || selectedValue?.countryName : 'Select a country' }}
   </v-button>
 
   <v-drawer
@@ -31,23 +31,23 @@
     </div>
   </v-drawer>
 
-  <div v-if="selectedValue" class="country-info">
+  <div v-if="displayText || selectedValue" class="country-info">
     <div class="country-info-header">
-      <span class="country-name">{{ selectedValue?.countryName }}</span>
-      <span class="country-code">{{ selectedValue?.countryCode }}</span>
+      <span class="country-name">{{ selectedValue?.countryName || displayText?.countryName }}</span>
+      <span class="country-code">{{ selectedValue?.countryCode || displayText?.countryCode }}</span>
     </div>
     <div class="country-info-details">
       <div class="info-item">
         <span class="label">Locale:</span>
-        <span>{{ selectedValue?.defaultLocale }}</span>
+        <span>{{ selectedValue?.defaultLocale || displayText?.defaultLocale }}</span>
       </div>
       <div class="info-item">
         <span class="label">Currency:</span>
-        <span>{{ selectedValue?.currency }}</span>
+        <span>{{ selectedValue?.currency || displayText?.currency }}</span>
       </div>
       <div class="info-item">
         <span class="label">Phone:</span>
-        <span>{{ selectedValue?.phone }}</span>
+        <span>{{ selectedValue?.phone || displayText?.phone }}</span>
       </div>
     </div>
   </div>
