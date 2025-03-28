@@ -1,11 +1,35 @@
 <template>
-  <v-select
-    v-model="selectedValue"
-    :items="countries"
-    :placeholder="$t('Select a country')"
-    item-text="text"
-    item-value="value"
-    @update:model-value="updateSelectedCountry" />
+  <v-button
+    @click="showDrawer = true"
+    :disabled="disabled">
+    {{ displayText?.countryName ? displayText.countryName : 'Select a country' }}
+  </v-button>
+
+  <v-drawer
+    v-model="showDrawer"
+    title="Select a country"
+    @cancel="showDrawer = false">
+    <template #actions>
+      <v-input
+        v-model="searchQuery"
+        placeholder="Search country..."
+        autofocus>
+        <template #prepend><v-icon name="search" /></template>
+      </v-input>
+    </template>
+    <div class="countries-list">
+      <v-list>
+        <v-list-item
+          v-for="country in filteredCountries"
+          :key="country.value"
+          :active="selectedValue?.countryCode === country.value"
+          clickable
+          @click="selectCountry(country.value)">
+          <v-list-item-content>{{ country.text }}</v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </div>
+  </v-drawer>
 
   <div v-if="selectedValue" class="country-info">
     <div class="country-info-header">
@@ -31,10 +55,11 @@
 
 <script setup lang="ts">
   import { countries as countriesList } from 'countries-list';
-  import { computed, ref } from 'vue';
+  import { computed, ref, watch } from 'vue';
 
   const props = defineProps<{
     value: string | null;
+    disabled: boolean;
   }>();
 
   const emit = defineEmits<{
@@ -52,29 +77,33 @@
     }))
   );
 
-  const parseStoredValue = (value: string | null) => {
-    if (!value) return null;
-    try {
-      if (typeof value === 'string' && value.startsWith('{')) {
-        const parsed = JSON.parse(value);
-        return parsed.countryCode;
-      }
-      return value;
-    } catch {
-      return value;
-    }
-  };
-
   const getCountryByCode = (code: string) => {
     return countriesList[code];
   };
 
   const selectedValue = computed(() => {
-    // Parse the country code from the provided prop value
-    const countryCode = parseStoredValue(props.value);
-    if (!countryCode) return null;
+    if (!props.value) return null;
+    try {
+      if (typeof props.value === 'string' && props.value.startsWith('{')) {
+        return JSON.parse(props.value);
+      }
+      // Handle legacy format where only country code was stored
+      const country = getCountryByCode(props.value);
+      return {
+        countryName: country?.name,
+        countryCode: props.value,
+        defaultLocale: props.value.toLowerCase(),
+        currency: country?.currency,
+        phone: '+' + country?.phone
+      };
+    } catch {
+      return null;
+    }
+  });
 
-    return countryCode;
+  const displayText = computed(() => {
+    if (!selectedValue.value) return props.value ? props.value : 'Select a country';
+    return selectedValue.value.countryName;
   });
 
   const updateSelectedCountry = (newValue: string) => {
@@ -89,6 +118,31 @@
     const formattedValue = JSON.stringify(data).replace(/\\/g, '');
     emit('input', formattedValue);
   };
+
+  const showDrawer = ref(false);
+
+  const selectCountry = (code: string) => {
+    updateSelectedCountry(code);
+    showDrawer.value = false;
+  };
+
+  const searchQuery = ref('');
+
+  const filteredCountries = computed(() => {
+    const query = searchQuery.value.toLowerCase();
+    if (!query) return countries.value;
+
+    return countries.value.filter(country =>
+      country.text.toLowerCase().includes(query)
+    );
+  });
+
+  // Reset search when drawer closes
+  watch(showDrawer, (isOpen) => {
+    if (!isOpen) {
+      searchQuery.value = '';
+    }
+  });
 </script>
 
 <style scoped>
@@ -134,5 +188,14 @@
 .label {
   color: var(--foreground-subdued);
   min-width: 70px;
+}
+
+.countries-list {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.v-input {
+  margin-bottom: 12px;
 }
 </style>
