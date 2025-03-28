@@ -8,7 +8,7 @@ export default defineInterface({
   icon: 'flag',
   description: 'Select a country from a dropdown list',
   component: InterfaceComponent,
-  types: ['json'],
+  types: ['json', 'string'],
   group: 'standard',
   options: null,
   recommendedDisplays: ['raw']
